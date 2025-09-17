@@ -2,8 +2,8 @@
         body { font-family: 'Inter', sans-serif; }
         
         .imagen__logo{
-            width: 50%;
-            height: 50%;
+            width: 60%;
+            height: 60%;
         }
         .chart-container { position: relative; width: 100%; max-width: 400px; margin: auto; height: 300px; }
         @media (min-width: 768px) { .chart-container { height: 250px; } }
@@ -26,3 +26,4 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     
+
