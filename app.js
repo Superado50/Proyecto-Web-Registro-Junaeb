@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchLogInput = document.getElementById('searchLog');
     const loadingOverlay = document.getElementById('loading-overlay');
     const configWarningDiv = document.getElementById('config-warning');
+    const autocompleteList = document.getElementById('autocomplete-list');
 
     // --- INICIALIZACIÓN DEL GRÁFICO (Chart.js) ---
     // Obtenemos el "lienzo" (canvas) del HTML donde se dibujará el gráfico.
@@ -320,4 +321,5 @@ rutInput.addEventListener('input', () => {
     // Llama a la función para cargar la base de datos en cuanto la página esté lista.
     cargarBaseDeDatos();
 });
+
 
