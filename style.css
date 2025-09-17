@@ -2,8 +2,8 @@
         body { font-family: 'Inter', sans-serif; }
         
         .imagen__logo{
-            width: 10%;
-            height: 10%;
+            width: 5%;
+            height: 5%;
             display: flex;
             position-flex: center;
         }
@@ -28,6 +28,7 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
     
+
 
 
 
