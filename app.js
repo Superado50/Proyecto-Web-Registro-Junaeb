@@ -258,6 +258,58 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
     };    
 
+// --- LÓGICA DE AUTOCOMPLETADO ---
+
+// 1. Se añade un "escuchador" al campo de búsqueda que se activa cada vez que escribes algo.
+rutInput.addEventListener('input', () => {
+    // Obtiene el valor actual del campo y lo convierte a minúsculas para una búsqueda sin distinción.
+    const value = rutInput.value.toLowerCase();
+    // Limpia la lista de sugerencias anterior.
+    autocompleteList.innerHTML = '';
+
+    // Si el campo de búsqueda está vacío, oculta la lista y no hace nada más.
+    if (!value) {
+        autocompleteList.classList.add('hidden');
+        return;
+    }
+
+    // 2. Filtra la 'baseDeDatos' para encontrar usuarios cuyo RUT comience con lo que has escrito.
+    //    .slice(0, 5) limita los resultados a un máximo de 5 sugerencias para que la lista no sea muy larga.
+    const suggestions = baseDeDatos.filter(user => user.rut.toLowerCase().startsWith(value)).slice(0, 5);
+
+    // 3. Si se encontraron sugerencias...
+    if (suggestions.length > 0) {
+        // ...recorre cada sugerencia y crea un elemento HTML para ella.
+        suggestions.forEach(user => {
+            const item = document.createElement('div');
+            // Se le asignan clases de Tailwind para el estilo.
+            item.className = 'p-3 hover:bg-stone-100 cursor-pointer border-b border-stone-100';
+            // Se define el contenido HTML, mostrando el RUT y el nombre del usuario.
+            item.innerHTML = `
+                <p class="font-semibold text-stone-800">${user.rut}</p>
+                <p class="text-sm text-stone-500">${user.nombre}</p>
+            `;
+            // 4. Se añade un evento de clic a cada sugerencia.
+            item.addEventListener('click', () => {
+                rutInput.value = user.rut; // Pone el RUT seleccionado en el campo de búsqueda.
+                autocompleteList.classList.add('hidden'); // Oculta la lista.
+                rutInput.focus(); // Devuelve el foco al campo de búsqueda.
+                processRegistration(); // Llama a la función principal para registrar al usuario.
+            });
+            // Añade el elemento de la sugerencia a la lista visible.
+            autocompleteList.appendChild(item);
+        });
+        // Muestra el contenedor de la lista.
+        autocompleteList.classList.remove('hidden');
+    } else {
+        // Si no hay sugerencias, se asegura de que la lista esté oculta.
+        autocompleteList.classList.add('hidden');
+    }
+});
+
+// --- FIN DE LÓGICA DE AUTOCOMPLETADO ---
+
+    
     // --- "ESCUCHADORES" DE EVENTOS ---
     // Asigna las funciones a las acciones del usuario.
     rutInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processRegistration(); });
@@ -268,3 +320,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Llama a la función para cargar la base de datos en cuanto la página esté lista.
     cargarBaseDeDatos();
 });
+
