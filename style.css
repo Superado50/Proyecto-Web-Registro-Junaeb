@@ -6,6 +6,8 @@
             height: 10px;
             
         }
+
+
         .chart-container { position: relative; width: 100%; max-width: 400px; margin: auto; height: 300px; }
         @media (min-width: 768px) { .chart-container { height: 250px; } }
         ::-webkit-scrollbar { width: 8px; }
@@ -26,7 +28,12 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
+        .footer{
+                text-align: center;
+        }
+
     
+
 
 
 
