@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let servicioActual = "";
 
         // Determina el bloque horario y el servicio.
-        if (horaActual >= "08:30:00" && horaActual <= "11:30:00") {
+        if (horaActual >= "08:30:00" && horaActual <= "12:59:00") {
             servicioActual = "Desayuno";
         } else if (horaActual >= "13:00:00" && horaActual <= "14:30:00") {
             servicioActual = "Almuerzo";
@@ -321,6 +321,7 @@ rutInput.addEventListener('input', () => {
     // Llama a la función para cargar la base de datos en cuanto la página esté lista.
     cargarBaseDeDatos();
 });
+
 
 
 
