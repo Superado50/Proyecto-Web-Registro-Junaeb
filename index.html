@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control de Raciones Junaeb</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: Se diseñó una interfaz tipo dashboard de dos columnas. La columna izquierda centraliza la acción principal (búsqueda y registro) y la retroalimentación visual inmediata (datos y foto del usuario), optimizando el flujo para el operador. La columna derecha presenta una vista agregada y en tiempo real de los datos del día (KPIs, gráfico y tabla de registros), permitiendo un monitoreo constante y análisis al instante. Esta estructura separa la "acción" de la "visualización", creando una experiencia de usuario más limpia y eficiente que un simple formulario. -->
+    <!-- Visualization & Content Choices: 1. KPIs (Total, Desayunos, Almuerzos): Informar de forma rápida y destacada el estado actual. 2. Gráfico de Dona (Chart.js): Comparar la proporción entre servicios, actualizándose dinámicamente para un impacto visual inmediato. 3. Tabla de Registros en Vivo: Organizar y detallar cada registro, con búsqueda integrada para consultas rápidas. 4. Visualización de Foto y Datos: Confirmar de forma inequívoca el registro exitoso. 5. Botón de Exportación a CSV: Proveer una salida de datos estándar y universal. Se eligió Chart.js por su renderizado en Canvas y su fácil actualización dinámica. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <!-- Pantalla de Carga -->
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p class="text-stone-600">Cargando base de datos...</p>
+    </div>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Panel de Control de Raciones Junaeb</h1>
+            <p class="text-stone-600 mt-2">Sistema de registro y visualización en tiempo real.</p>
+            <img  class="imagen__logo"  src="fondo2.png"/>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Columna de Registro y Feedback -->
+            <div class="lg:col-span-1 bg-white p-6 rounded-2xl shadow-md space-y-6 h-fit">
+                <div id="config-warning" class="hidden p-4 bg-yellow-100 text-yellow-800 rounded-lg">
+                    <p class="font-bold">Modo Demo Activo</p>
+                    <p class="text-sm">La aplicación está usando datos de ejemplo. Para conectar tus datos, sigue las instrucciones de configuración en el código.</p>
+                </div>
+
+                <div>
+                    <label for="rutInput" class="block text-sm font-medium text-stone-700 mb-2">Escanear o Escribir RUT:</label>
+                    <input type="text" id="rutInput" class="w-full px-4 py-3 bg-stone-100 border-stone-200 border rounded-lg text-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition" placeholder="Configuración requerida..." disabled>
+                </div>
+
+                <div id="feedbackArea" class="p-4 rounded-lg text-center h-24 flex items-center justify-center transition-all duration-300 bg-stone-100">
+                    <p class="text-stone-500">Esperando registro...</p>
+                </div>
+
+                <div id="userInfo" class="text-center space-y-4 hidden">
+                    <img id="userPhoto" src="https://placehold.co/150x150/e2e8f0/334155?text=Foto" alt="Foto del Usuario" class="w-32 h-32 mx-auto rounded-full object-cover shadow-lg border-4 border-white">
+                    <div>
+                        <h2 id="userName" class="text-2xl font-bold text-stone-900"></h2>
+                        <p id="userCourse" class="text-stone-600 text-lg"></p>
+                    </div>
+                </div>
+                
+                <button id="exportButton" class="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-teal-700 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500">
+                    Exportar Registro del Día (CSV)
+                </button>
+            </div>
+
+            <!-- Columna de Datos y Gráficos -->
+            <div class="lg:col-span-2 space-y-8">
+                <!-- KPIs -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-md text-center">
+                        <h3 class="text-stone-500 font-semibold">Total Registros Hoy</h3>
+                        <p id="kpiTotal" class="text-4xl font-bold mt-2">0</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md text-center">
+                        <h3 class="text-stone-500 font-semibold">Desayunos</h3>
+                        <p id="kpiDesayunos" class="text-4xl font-bold text-sky-600 mt-2">0</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-md text-center">
+                        <h3 class="text-stone-500 font-semibold">Almuerzos</h3>
+                        <p id="kpiAlmuerzos" class="text-4xl font-bold text-amber-600 mt-2">0</p>
+                    </div>
+                </div>
+
+                <!-- Gráfico y Tabla -->
+                <div class="grid grid-cols-1 xl:grid-cols-5 gap-8">
+                    <div class="xl:col-span-2 bg-white p-6 rounded-2xl shadow-md">
+                        <h3 class="text-lg font-semibold text-center mb-4">Distribución de Servicios</h3>
+                        <div class="chart-container">
+                            <canvas id="serviciosChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="xl:col-span-3 bg-white p-6 rounded-2xl shadow-md">
+                         <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold">Registros del Día</h3>
+                             <input type="text" id="searchLog" class="px-3 py-1.5 bg-stone-100 border-stone-200 border rounded-lg text-sm focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition" placeholder="Buscar en registro...">
+                        </div>
+                        <div class="overflow-auto h-96">
+                            <table class="w-full text-sm text-left text-stone-500">
+                                <thead class="text-xs text-stone-700 uppercase bg-stone-100 sticky top-0">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3">Hora</th>
+                                        <th scope="col" class="px-4 py-3">RUT</th>
+                                        <th scope="col" class="px-4 py-3">Nombre</th>
+                                        <th scope="col" class="px-4 py-3">Servicio</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="logTableBody">
+                                    <!-- Las filas de registro se insertarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+<script src="app.js"></script>
+</body>
+</html>
+
