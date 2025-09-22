@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const now = new Date();
         const horaActual = now.toTimeString().slice(0, 8);
         let servicioActual = "";
-        if (horaActual >= "09:00:00" && horaActual <= "10:00:00") servicioActual = "Desayuno";
+        if (horaActual >= "08:00:00" && horaActual <= "10:00:00") servicioActual = "Desayuno";
         else if (horaActual >= "11:00:00" && horaActual <= "23:50:00") servicioActual = "Almuerzo";
         if (servicioActual === "") { showFeedback('Registro fuera de horario permitido.', 'warning'); return; }
         const hoy = now.toISOString().slice(0, 10);
