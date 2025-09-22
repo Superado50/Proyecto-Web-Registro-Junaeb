@@ -229,10 +229,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- EVENT LISTENERS ---
     rutInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') processRegistration(); });
     document.addEventListener('click', (e) => { if (!e.target.closest('.relative')) autocompleteList.classList.add('hidden'); });
-    searchLogInput.addEventListener('input', (e) => renderLogTable(e.target.value.toLowerCase()));
+    /*searchLogInput.addEventListener('input', (e) => renderLogTable(e.target.value.toLowerCase()));*/
     exportButton.addEventListener('click', exportToCSV);
     
     // --- INICIALIZACIÓN ---
     cargarBaseDeDatos();
 });
-
